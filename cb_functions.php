@@ -103,6 +103,36 @@ function user_set_ignored($nick, $ignore) {
 		user_adj_points($nick, 0, "Unignored =0");
 }
 
+// when implementing .setalias
+// $nick = strtolower($nick)
+// if ($nick == user_follow_alias($nick)) {
+//     # warn user about loop
+// }
+
+function user_get_alias($nick) {
+	global $users;
+	$nick = nicktolower($nick);
+	return @$users[$nick]["alias"];
+}
+
+function user_follow_alias($nick) {
+	global $users;
+	$nick = nicktolower($nick);
+	while (isset($users[$nick]["alias"])) {
+		$target = nicktolower($users[$nick]["alias"]);
+		if ($target == $nick)
+			break;
+		$nick = $target;
+	}
+	return $nick;
+}
+
+function user_set_alias($nick, $target) {
+	global $users;
+	$nick = nicktolower($nick);
+	$users[$nick]["alias"] = $target;
+}
+
 function user_get_stats($nick) {
 	global $users;
 	$nick = nicktolower($nick);
