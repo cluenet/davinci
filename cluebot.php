@@ -248,46 +248,43 @@ function rate_message($nick, $message) {
 	or preg_match('/^(brb|bbl|lol|rot?fl|heh|wt[fh]|haha?|lmf?ao|bbiab|grr+|hr?m+|gtg|wb)/i', $message)
 	or preg_match('!(http|ftp)s?://!', $message)
 	or preg_match('/^[^a-z]/i', $message)
-	) {
+	)
 		return;
-	}
 
-	if (preg_match('/(^| )[ru]( |$)/i', $message)) {
-		user_adj_points($nick, -40, "Use of r, R, u, or U -40");
-	}
+	$total = 0;
 
-	if (!preg_match('/[aeiouy]/i', $message)) {
-		user_adj_points($nick, -30, "No vowels -30");
-	}
+	if (preg_match('/(^| )[ru]( |$)/i', $message))
+		$total += user_adj_points($nick, -40, "Use of r, R, u, or U -40");
 
-	if (preg_match('/\b(cunt|fuck)\b/i', $message)) {
-		user_adj_points($nick, -20, "Use of uncreative profanity -20");
-	}
+	if (!preg_match('/[aeiouy]/i', $message))
+		$total += user_adj_points($nick, -30, "No vowels -30");
 
-	if (preg_match('/^[^a-z]{8,}$/', $message)) {
-		user_adj_points($nick, -20, "All caps -20");
-	}
+	if (preg_match('/\b(cunt|fuck)\b/i', $message))
+		$total += user_adj_points($nick, -20, "Use of uncreative profanity -20");
 
-	if (preg_match('/(^| )lawl( |$)/', $message)) {
-		user_adj_points($nick, -20, "Use of non-clueful variation of \"lol\" -20");
-	}
+	if (preg_match('/^[^a-z]{8,}$/', $message))
+		$total += user_adj_points($nick, -20, "All caps -20");
 
-	if (preg_match('/(^| )rawr( |$)/', $message)) {
-		user_adj_points($nick, -20, "Use of non-clueful expression -20");
-	}
+	if (preg_match('/(^| )lawl( |$)/', $message))
+		$total += user_adj_points($nick, -20,
+			"Use of non-clueful variation of \"lol\" -20");
 
-	if (preg_match('/(^| )i( |$)/', $message)) {
-		user_adj_points($nick, -5, "Lower-case personal pronoun -5");
-	}
+	if (preg_match('/(^| )rawr( |$)/', $message))
+		$total += user_adj_points($nick, -20, "Use of non-clueful expression -20");
+
+	if (preg_match('/(^| )i( |$)/', $message))
+		$total += user_adj_points($nick, -5, "Lower-case personal pronoun -5");
 
 	// Shit, I have no idea what this does. Let's assume it works.
 	if (preg_match('/^([^ ]+(:|,| -) .|[^a-z]).*(\?|\.(`|\'|")?|!|:|'.$smilies.')( '.$smilies.')?$/',$message)) {
-		user_adj_points($nick, +2, "Clueful sentence +2");
+		$total += user_adj_points($nick, +2, "Clueful sentence +2");
 	} elseif (preg_match('/^([^ ]+(:|,| -) .|[^a-z]).*$/', $message)) {
-		user_adj_points($nick, +1, "Normal sentence +1");
+		$total += user_adj_points($nick, +1, "Normal sentence +1");
 	} else {
-		user_adj_points($nick, -1, "Abnormal sentence -1");
+		$total += user_adj_points($nick, -1, "Abnormal sentence -1");
 	}
+
+	return $total;
 }
 
 //mysqlconn($config['mysqluser'],$config['mysqlpass'],$config['mysqlhost'],$config['mysqlport'],$config['mysqldb']);
@@ -349,11 +346,16 @@ while (!feof($socket)) {
 		$target = $params[1];
 		$message = $params[2];
 		if ($message == "\001VERSION\001") {
-			send("NOTICE", $srcnick, "\001VERSION DaVinci by Cluenet (HEAD is " . $git_hash . ")\001");
+			send("NOTICE", $srcnick, "\001VERSION DaVinci by Cluenet (HEAD is $git_hash)\001");
 		} elseif ($message[0] == $config["trigger"]) {
 			on_trigger($source, $target, $message);
 		} elseif (ischannel($target)) {
-			rate_message($srcnick, $message);
+			$delta = rate_message($srcnick, $message);
+			$pts = user_get_points($srcnick);
+			if ($pts <= -500 && $delta <= 0) {
+				send("MODE", $target, "+b", "$srcnick!*@*");
+				send("KICK", $target, $srcnick, "CLUEBAAAAAAAAT");
+			}
 		} else {
 			send("NOTICE", $srcnick, "?");
 		}
