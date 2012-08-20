@@ -229,6 +229,8 @@ function on_trigger($source, $target, $message) {
 		elseif ($pts >= -1500)	$rank = 'Lamer';
 		else			$rank = 'Idiot';
 
+		if ($who == "grawity")	$rank = 'Chaotic Neutral';
+
 		send("NOTICE", $srcnick, "$who has $pts points and holds the rank of $rank.");
 		send("NOTICE", $srcnick, "$who's stats: $stats");
 		if (user_is_admin($who))
@@ -334,6 +336,9 @@ while (!feof($socket)) {
 		send("NICK", $newnick);
 		break;
 	case "INVITE":
+		$pts = user_get_points($srcnick);
+		if ($pts <= 0)
+			break;
 		$target = $params[1];
 		$channel = $params[2];
 		send("JOIN", $channel);
