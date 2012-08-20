@@ -123,10 +123,10 @@ function user_get_points($nick) {
 function user_adj_points($nick, $delta, $reason) {
 	global $users;
 	$nick = nicktolower($nick);
-	if($users[$nick]["ignore"])
+	if(@$users[$nick]["ignore"])
 		return;
-	$users[$nick]["points"] += $delta;
-	$users[$nick]["log"][$reason]++;
+	@$users[$nick]["points"] += $delta;
+	@$users[$nick]["log"][$reason]++;
 	save_db();
 
 	if($reason == "Administratively changed")
