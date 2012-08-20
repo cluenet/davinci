@@ -193,12 +193,12 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'reset':
-		if (user_is_admin($srcnick)) {
-			$victim = $args[1];
-			if (!isset($victim)) {
-				send("NOTICE", $srcnick, "Missing user argument.");
-				break;
-			}
+		$victim = $args[1];
+		if (!isset($victim)) {
+			send("NOTICE", $srcnick, "Missing user argument.");
+			break;
+		}
+		if (user_is_admin($srcnick) || nickeq($srcnick, $victim)) {
 			user_reset_points($victim);
 			send("NOTICE", $srcnick, "User $victim reset.");
 		} else {

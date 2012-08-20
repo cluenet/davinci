@@ -70,6 +70,10 @@ function nicktolower($nick) {
 	return $nick;
 }
 
+function nickeq($a, $b) {
+	return nicktolower($a) === nicktolower($b);
+}
+
 function user_is_admin($nick) {
 	global $users;
 	$nick = nicktolower($nick);
