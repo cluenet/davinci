@@ -339,7 +339,7 @@ while (!feof($socket)) {
 		break;
 	case "INVITE":
 		$pts = user_get_points($srcnick);
-		if ($pts <= 0)
+		if ($pts <= 0 && !user_is_admin($srcnick))
 			break;
 		$target = $params[1];
 		$channel = $params[2];
@@ -359,7 +359,7 @@ while (!feof($socket)) {
 		} elseif (ischannel($target)) {
 			$delta = rate_message($srcnick, $message);
 			$pts = user_get_points($srcnick);
-			if ($pts <= -500 && $delta <= 0) {
+			if ($pts <= -500 && $delta <= 0 && !user_is_admin($srcnick)) {
 				send("MODE", $target, "+b", "$srcnick!*@*");
 				send("KICK", $target, $srcnick, "CLUEBAAAAAAAAT");
 			}
