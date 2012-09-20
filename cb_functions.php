@@ -1,6 +1,8 @@
 <?php
 // vim: noet
 
+### IRC protocol stuff
+
 class Prefix {
 	public $nick;
 	public $user;
@@ -73,6 +75,17 @@ function nicktolower($nick) {
 function nickeq($a, $b) {
 	return nicktolower($a) === nicktolower($b);
 }
+
+### Misc utilities
+
+function mysort($a,$b) {
+	if(!isset($a)) $a = 0;
+	if(!isset($b)) $b = 0;
+	return($a == $b) ? 0 :
+		($a > $b) ? 1 : -1;
+}
+
+### User database (high-level)
 
 function user_is_admin($nick) {
 	global $users;
@@ -156,13 +169,6 @@ function user_merge($old_user, $new_user) {
 	user_adj_points($new_user, $old_points, "Merged with $old_user");
 	user_reset_points($old_user);
 	save_db();
-}
-
-function mysort($a,$b) {
-	if(!isset($a)) $a = 0;
-	if(!isset($b)) $b = 0;
-	return($a == $b) ? 0 :
-		($a > $b) ? 1 : -1;
 }
 
 function gettop($bottom = false) {
