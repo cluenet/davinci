@@ -116,7 +116,7 @@ function log_strv(/*$fmt, @args*/) {
 function user_is_admin($nick) {
 	global $users;
 	$nick = nicktolower($nick);
-	return(bool) @$users[$nick]['admin'];
+	return (bool) @$users[$nick]['admin'];
 }
 
 function user_make_admin($nick) {
@@ -129,7 +129,7 @@ function user_make_admin($nick) {
 function user_is_ignored($nick) {
 	global $users;
 	$nick = nicktolower($nick);
-	return(bool) @$users[$nick]['ignore'];
+	return (bool) @$users[$nick]['ignore'];
 }
 
 function user_set_ignored($nick, $ignore) {
