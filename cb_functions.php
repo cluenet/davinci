@@ -159,10 +159,15 @@ function user_adj_points($nick, $delta, $reason) {
 	return $delta;
 }
 
-function user_reset_points($nick) {
+function user_reset_points($caller, $nick) {
 	global $users;
 	$nick = nicktolower($nick);
+
 	unset($users[$nick]);
+	save_db();
+
+	if (!nickeq($nick, $caller))
+		send("NOTICE", $nick, "Your ClueBot account was reset by $caller.");
 }
 
 function user_merge($old_user, $new_user) {
