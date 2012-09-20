@@ -109,13 +109,18 @@ function user_is_ignored($nick) {
 function user_set_ignored($nick, $ignore) {
 	global $users;
 	$nick = nicktolower($nick);
+
 	$users[$nick]["ignore"] = $ignore;
-	$users[$nick]["points"] = 0;
-	$users[$nick]["log"] = array();
-	if($ignore)
-		user_adj_points($nick, 0, "Ignored =0");
-	else
-		user_adj_points($nick, 0, "Unignored =0");
+
+	if ($ignore) {
+		$users[$nick]["points"] = 0;
+		$users[$nick]["log"] = array("Ignored =0" => 1);
+		send("NOTICE", $nick, "You are now ignored by me.");
+	} else {
+		unset($users[$nick]["log"]["Ignored =0"]);
+		send("NOTICE", $nick, "I stopped ignoring you.");
+	}
+
 }
 
 function user_get_stats($nick) {
