@@ -78,11 +78,37 @@ function nickeq($a, $b) {
 
 ### Misc utilities
 
+function strescape($str) {
+	return addcslashes($str, "\x00..\x1F\x7F..\xFF\\");
+}
+
 function mysort($a,$b) {
 	if(!isset($a)) $a = 0;
 	if(!isset($b)) $b = 0;
 	return($a == $b) ? 0 :
 		($a > $b) ? 1 : -1;
+}
+
+### Logging
+
+function _log_open() {
+	global $log_fh;
+	if (!isset($log_fh))
+		$log_fh = fopen("points.log", "a");
+	return $log_fh;
+}
+
+function log_str($str) {
+	$time = time();
+	$fh = _log_open();
+	fprintf($fh, "%d %s\n", $time, $str);
+	printf("%s %s\n", date("c", $time), $str);
+}
+
+function log_strv(/*$fmt, @args*/) {
+	$args = func_get_args();
+	$fmt = array_shift($args);
+	return log_str(vsprintf($fmt, $args));
 }
 
 ### User database (high-level)
@@ -115,9 +141,11 @@ function user_set_ignored($nick, $ignore) {
 	if ($ignore) {
 		$users[$nick]["points"] = 0;
 		$users[$nick]["log"] = array("Ignored =0" => 1);
+		log_strv("ignore %s", $nick);
 		send("NOTICE", $nick, "You are now ignored by me.");
 	} else {
 		unset($users[$nick]["log"]["Ignored =0"]);
+		log_strv("unignore %s", $nick);
 		send("NOTICE", $nick, "I stopped ignoring you.");
 	}
 
@@ -155,6 +183,9 @@ function user_adj_points($nick, $delta, $reason) {
 		$log = @$users[$nick]["vdedo"];
 	if ($log)
 		send("NOTICE", $nick, "$reason ($delta points)");
+
+	log_strv("change %s %s%d \"%s\"",
+		$nick, ($delta < 0 ? "" : "+"), $delta, strescape($reason));
 	
 	return $delta;
 }
@@ -165,6 +196,7 @@ function user_reset_points($caller, $nick) {
 
 	unset($users[$nick]);
 	save_db();
+	log_strv("reset %s", $nick);
 
 	if (!nickeq($nick, $caller))
 		send("NOTICE", $nick, "Your ClueBot account was reset by $caller.");
