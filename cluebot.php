@@ -245,7 +245,9 @@ function rate_message($nick, $message) {
 	$smilies  = '((>|\})?(:|;|8)(-|\')?(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)';
 	$smilies .= '|(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)(-|\')?(:|;|8)(>|\})?)';
 
-	if (preg_match('/^'.$smilies.'$/i', $message)
+	if (
+	preg_match('!^s/.+/.*/?$!', $message)
+	or preg_match('/^'.$smilies.'$/i', $message)
 	or preg_match('/^(um+|uh+m*|er+m*|ah+|ok)\.*$/i', $message)
 	or preg_match('/^(brb|bbl|lol|rot?fl|heh|wt[fh]|haha?|lmf?ao|bbiab|grr+|hr?m+|gtg|wb)/i', $message)
 	or preg_match('!(http|ftp)s?://!', $message)
