@@ -142,13 +142,13 @@ function user_adj_points($nick, $delta, $reason) {
 	@$users[$nick]["log"][$reason]++;
 	save_db();
 
-	if($reason == "Administratively changed")
-		$log = $users[$nick]["vlog"];
-	elseif($delta > 0)
-		$log = $users[$nick]["verbose"];
+	if ($reason == "Administratively changed")
+		$log = @$users[$nick]["vlog"];
+	elseif ($delta > 0)
+		$log = @$users[$nick]["verbose"];
 	else
-		$log = $users[$nick]["vdedo"];
-	if($log)
+		$log = @$users[$nick]["vdedo"];
+	if ($log)
 		send("NOTICE", $nick, "$reason ($delta points)");
 	
 	return $delta;
