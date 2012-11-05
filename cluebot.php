@@ -74,7 +74,7 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'vlog':
-		send("NOTICE", $srcnick, ".vlog mode is now always enabled and does not affect other modes.");
+		send("NOTICE", $srcnick, ".vlog mode is now always enabled.");
 		break;
 	case 'points':
 		$who = $args[1] ? $args[1] : $srcnick;
@@ -98,12 +98,12 @@ function on_trigger($source, $target, $message) {
 	case 'unignore':
 		$ignore = false;
 	case 'ignore':
+		if (count($args) < 1) {
+			send("NOTICE", $srcnick, "Usage: $cmd <user>");
+			break;
+		}
 		if (user_is_admin($srcnick)) {
 			$victim = $args[1];
-			if (!isset($victim)) {
-				send("NOTICE", $srcnick, "Missing user argument.");
-				break;
-			}
 			user_set_ignored($srcnick, $victim, $ignore);
 			if ($ignore) {
 				send("NOTICE", $srcnick, "$victim is now ignored.");
@@ -128,12 +128,12 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'makeadmin':
+		if (count($args) < 1) {
+			send("NOTICE", $srcnick, "Usage: $cmd <user>");
+			break;
+		}
 		if (user_is_admin($srcnick)) {
 			$victim = $args[1];
-			if (!isset($victim)) {
-				send("NOTICE", $srcnick, "Missing user argument.");
-				break;
-			}
 			user_make_admin($srcnick, $victim);
 			send("NOTICE", $srcnick, "$victim is now an admin.");
 			send("NOTICE", $victim, "$srcnick just made you an admin.");
@@ -150,13 +150,13 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'merge':
+		if (count($args) < 2) {
+			send("NOTICE", $srcnick, "Usage: $cmd <old> <new>");
+			break;
+		}
 		if (user_is_admin($srcnick)) {
 			$old_user = $args[1];
 			$new_user = $args[2];
-			if (!isset($old_user) || !isset($new_user)) {
-				send("NOTICE", $srcnick, "Usage: .merge old_user new_user");
-				break;
-			}
 			user_merge($srcnick, $old_user, $new_user);
 			send("NOTICE", $srcnick, "Merged $old_user into $new_user");
 		} else {
@@ -164,13 +164,13 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'chgpts':
+		if (count($args) < 2) {
+			send("NOTICE", $srcnick, "Usage: $cmd <user> <delta>");
+			break;
+		}
 		if (user_is_admin($srcnick)) {
 			$victim = $args[1];
 			$delta = $args[2];
-			if (!isset($victim) or !isset($delta)) {
-				send("NOTICE", $srcnick, "Missing user argument.");
-				break;
-			}
 			user_adj_points_by($srcnick, $victim, $delta,
 				"Administratively changed");
 			send("NOTICE", $srcnick, "Points of $victim changed.");
@@ -179,11 +179,11 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'reset':
-		$victim = $args[1];
-		if (!isset($victim)) {
-			send("NOTICE", $srcnick, "Missing user argument.");
+		if (count($args) < 1) {
+			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
+		$victim = $args[1];
 		if (nickeq($srcnick, $victim)) {
 			user_reset_points($srcnick, $victim);
 			send("NOTICE", $victim, "Your DaVinci account was reset.");
@@ -198,12 +198,11 @@ function on_trigger($source, $target, $message) {
 	case 'whoami':
 		$args[1] = $srcnick;
 	case 'whois':
-		$who = $args[1];
-		if (!isset($who)) {
-			send("NOTICE", $srcnick, "Missing user argument.");
+		if (count($args) < 1) {
+			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
-
+		$who = $args[1];
 		$pts = user_get_points($who);
 		$stats = user_get_stats($who);
 
@@ -218,7 +217,6 @@ function on_trigger($source, $target, $message) {
 		elseif ($pts >= -1000)	$rank = 'Not Clueful';
 		elseif ($pts >= -1500)	$rank = 'Lamer';
 		else			$rank = 'Idiot';
-
 		if ($who == "grawity")	$rank = 'Chaotic Neutral';
 
 		send("NOTICE", $srcnick, "$who has $pts points and holds the rank of $rank.");
