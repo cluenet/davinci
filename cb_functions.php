@@ -263,47 +263,13 @@ const DB_FILE = 'users.db';
 
 function get_db() {
 	$ret = unserialize(file_get_contents(DB_FILE));
-//	global $mysql;
-//	$ret = array();
-//	$res = mysql_query('SELECT * FROM `users`');
-//	while($x = mysql_fetch_array($res)) {
-//		$ret[$x['nick']] = array(
-//			'ignore' => $x['ignore'],
-//			'admin' => $x['admin'],
-//			'points' => $x['points'],
-//			'verbose' => $x['verbose'],
-//			'vdedo' => $x['vdedo'],
-//			'vlog' => $x['vlog'],
-//			'log' => unserialize($x['log'])
-//		);
-//	}
 	return $ret;
 }
 
 function save_db() {
 	global $users;
-//	global $mysql;
 	global $locked;
 	if($locked) { return; }
 	file_put_contents(DB_FILE,serialize($users));
-//	mysql_query('TRUNCATE `users`');
-//	foreach($users as $nick => $data) {
-//		$query  = 'INSERT INTO `users` ';
-//
-//		$query .= '(`id`,`nick`,`points`,';
-//		$query .= '`ignore`,`admin`,`log`,';
-//		$query .= '`verbose`,`vdedo`,`vlog`) ';
-//
-//		$query .= 'VALUES (NULL,\''.mysql_real_escape_string($nick).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['points']).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['ignore']).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['admin']).'\',';
-//		$query .= '\''.mysql_real_escape_string(serialize($data['log'])).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['verbose']).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['vdedo']).'\',';
-//		$query .= '\''.mysql_real_escape_string($data['vlog']).'\')';
-//
-//		mysql_query($query);
-//	}
 }
 ?>
