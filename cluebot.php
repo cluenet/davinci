@@ -98,7 +98,7 @@ function on_trigger($source, $target, $message) {
 	case 'unignore':
 		$ignore = false;
 	case 'ignore':
-		if (count($args) < 1) {
+		if (count($args) <= 1) {
 			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
@@ -128,7 +128,7 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'makeadmin':
-		if (count($args) < 1) {
+		if (count($args) <= 1) {
 			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
@@ -150,7 +150,7 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'merge':
-		if (count($args) < 2) {
+		if (count($args) <= 2) {
 			send("NOTICE", $srcnick, "Usage: $cmd <old> <new>");
 			break;
 		}
@@ -164,7 +164,7 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'chgpts':
-		if (count($args) < 2) {
+		if (count($args) <= 2) {
 			send("NOTICE", $srcnick, "Usage: $cmd <user> <delta>");
 			break;
 		}
@@ -179,7 +179,7 @@ function on_trigger($source, $target, $message) {
 		}
 		break;
 	case 'reset':
-		if (count($args) < 1) {
+		if (count($args) <= 1) {
 			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
@@ -198,7 +198,7 @@ function on_trigger($source, $target, $message) {
 	case 'whoami':
 		$args[1] = $srcnick;
 	case 'whois':
-		if (count($args) < 1) {
+		if (count($args) <= 1) {
 			send("NOTICE", $srcnick, "Usage: $cmd <user>");
 			break;
 		}
