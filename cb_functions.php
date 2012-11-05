@@ -241,10 +241,12 @@ function mysqlconn($user,$pass,$host,$port,$database) {
 	if(!mysql_select_db($database,$mysql)) {
 		die('Can not access database!');
 	}
-}	
+}
+
+const DB_FILE = 'users.db';
 
 function get_db() {
-	$ret = unserialize(file_get_contents('cb_users.db'));
+	$ret = unserialize(file_get_contents(DB_FILE));
 //	global $mysql;
 //	$ret = array();
 //	$res = mysql_query('SELECT * FROM `users`');
@@ -267,7 +269,7 @@ function save_db() {
 //	global $mysql;
 	global $locked;
 	if($locked) { return; }
-	file_put_contents('cb_users.db',serialize($users));
+	file_put_contents(DB_FILE,serialize($users));
 //	mysql_query('TRUNCATE `users`');
 //	foreach($users as $nick => $data) {
 //		$query  = 'INSERT INTO `users` ';
