@@ -202,11 +202,11 @@ function on_trigger($source, $target, $message) {
 		}
 		if (nickeq($srcnick, $victim)) {
 			user_reset_points($srcnick, $victim);
-			send("NOTICE", $nick, "Your DaVinci account was reset.");
+			send("NOTICE", $victim, "Your DaVinci account was reset.");
 		} elseif (user_is_admin($srcnick)) {
 			user_reset_points($srcnick, $victim);
 			send("NOTICE", $srcnick, "User $victim reset.");
-			send("NOTICE", $nick, "Your DaVinci account was reset by $caller.");
+			send("NOTICE", $victim, "Your DaVinci account was reset by $caller.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}
