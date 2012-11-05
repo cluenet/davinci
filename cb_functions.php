@@ -151,7 +151,7 @@ function user_set_ignored($caller, $nick, $ignore) {
 		@$users[$nick]["log"] = array("Ignored =0" => 1);
 	} else {
 		@$users[$nick]["ignore"] = false;
-		unset(@$users[$nick]["log"]["Ignored =0"]);
+		unset($users[$nick]["log"]["Ignored =0"]);
 	}
 
 	if ($ignore) {
@@ -221,7 +221,7 @@ function user_reset_points($caller, $nick) {
 	global $users;
 	$nick = nicktolower($nick);
 
-	unset(@$users[$nick]);
+	unset($users[$nick]);
 	save_db();
 
 	log_strv("%s reset %s", $caller, $nick);
