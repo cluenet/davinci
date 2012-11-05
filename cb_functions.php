@@ -108,6 +108,9 @@ function log_str($str) {
 function log_strv(/*$fmt, @args*/) {
 	$args = func_get_args();
 	$fmt = array_shift($args);
+	foreach ($args as &$v)
+		if ($v === null)
+			$v = "-";
 	return log_str(vsprintf($fmt, $args));
 }
 
@@ -119,10 +122,11 @@ function user_is_admin($nick) {
 	return (bool) @$users[$nick]['admin'];
 }
 
-function user_make_admin($nick) {
+function user_make_admin($caller, $nick) {
 	global $users;
 	$nick = nicktolower($nick);
 	$users[$nick]['admin'] = true;
+	log_strv("%s grant:admin %s", $caller, $nick);
 	save_db();
 }
 
@@ -132,7 +136,7 @@ function user_is_ignored($nick) {
 	return (bool) @$users[$nick]['ignore'];
 }
 
-function user_set_ignored($nick, $ignore) {
+function user_set_ignored($caller, $nick, $ignore) {
 	global $users;
 	$nick = nicktolower($nick);
 
@@ -141,11 +145,11 @@ function user_set_ignored($nick, $ignore) {
 	if ($ignore) {
 		$users[$nick]["points"] = 0;
 		$users[$nick]["log"] = array("Ignored =0" => 1);
-		log_strv("ignore %s", $nick);
+		log_strv("%s ignore %s y", $caller, $nick);
 		send("NOTICE", $nick, "You are now ignored by me.");
 	} else {
 		unset($users[$nick]["log"]["Ignored =0"]);
-		log_strv("unignore %s", $nick);
+		log_strv("%s ignore %s n", $caller, $nick);
 		send("NOTICE", $nick, "I stopped ignoring you.");
 	}
 
@@ -167,6 +171,10 @@ function user_get_points($nick) {
 }
 
 function user_adj_points($nick, $delta, $reason) {
+	return user_adj_points_by(null, $nick, $delta, $reason);
+}
+
+function user_adj_points_by($caller, $nick, $delta, $reason) {
 	global $users;
 	$nick = nicktolower($nick);
 	if(@$users[$nick]["ignore"])
@@ -181,11 +189,18 @@ function user_adj_points($nick, $delta, $reason) {
 		$log = @$users[$nick]["verbose"];
 	else
 		$log = @$users[$nick]["vdedo"];
-	if ($log)
-		send("NOTICE", $nick, "$reason ($delta points)");
 
-	log_strv("change %s %s%d \"%s\"",
-		$nick, ($delta < 0 ? "" : "+"), $delta, strescape($reason));
+	if ($log) {
+		$msg = "$reason ($delta points)";
+		if ($caller !== null)
+			$msg .= " (by $caller)";
+		send("NOTICE", $nick, $msg);
+	}
+
+	log_strv("%s change %s %s%d \"%s\"",
+		$caller, $nick,
+		($delta < 0 ? "" : "+"), $delta,
+		strescape($reason));
 	
 	return $delta;
 }
@@ -196,20 +211,21 @@ function user_reset_points($caller, $nick) {
 
 	unset($users[$nick]);
 	save_db();
-	log_strv("reset %s", $nick);
+	log_strv("%s reset %s", $caller, $nick);
 
 	if (!nickeq($nick, $caller))
 		send("NOTICE", $nick, "Your ClueBot account was reset by $caller.");
 }
 
-function user_merge($old_user, $new_user) {
+function user_merge($caller, $old_user, $new_user) {
 	global $users;
 	$old_user = nicktolower($old_user);
 	$new_user = nicktolower($new_user);
 
 	$old_points = user_get_points($old_user);
-	user_adj_points($new_user, $old_points, "Merged with $old_user");
-	user_reset_points($old_user);
+	log_strv("%s merge %s %s %s", $caller, $old_user, $new_user, $old_points);
+	user_adj_points_by($caller, $new_user, $old_points, "Merged with $old_user");
+	user_reset_points($caller, $old_user);
 	save_db();
 }
 

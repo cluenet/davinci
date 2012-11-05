@@ -119,7 +119,7 @@ function on_trigger($source, $target, $message) {
 				send("NOTICE", $srcnick, "Missing user argument.");
 				break;
 			}
-			user_set_ignored($victim, $ignore);
+			user_set_ignored($srcnick, $victim, $ignore);
 			if ($ignore)
 				send("NOTICE", $srcnick, "$victim is now ignored.");
 			else
@@ -148,7 +148,7 @@ function on_trigger($source, $target, $message) {
 				send("NOTICE", $srcnick, "Missing user argument.");
 				break;
 			}
-			user_make_admin($victim);
+			user_make_admin($srcnick, $victim);
 			send("NOTICE", $srcnick, "$victim is now an admin.");
 			send("NOTICE", $victim, "$srcnick just made you an admin.");
 		} else {
@@ -171,7 +171,7 @@ function on_trigger($source, $target, $message) {
 				send("NOTICE", $srcnick, "Usage: .merge old_user new_user");
 				break;
 			}
-			user_merge($old_user, $new_user);
+			user_merge($srcnick, $old_user, $new_user);
 			send("NOTICE", $srcnick, "Merged $old_user into $new_user");
 			break;
 		} else {
@@ -186,7 +186,8 @@ function on_trigger($source, $target, $message) {
 				send("NOTICE", $srcnick, "Missing user argument.");
 				break;
 			}
-			user_adj_points($victim, $delta, "Administratively changed");
+			user_adj_points_by($srcnick, $victim, $delta,
+				"Administratively changed");
 			send("NOTICE", $srcnick, "Points of $victim changed.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
@@ -199,7 +200,7 @@ function on_trigger($source, $target, $message) {
 			break;
 		}
 		if (user_is_admin($srcnick) || nickeq($srcnick, $victim)) {
-			user_reset_points($victim);
+			user_reset_points($srcnick, $victim);
 			send("NOTICE", $srcnick, "User $victim reset.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");

@@ -17,6 +17,10 @@ function handle_req($req, $out) {
 		}
 		fwrite($out, "OK\n");
 		break;
+	case "tailf":
+		pcntl_exec("/usr/bin/tail", array("-f", "points.log"));
+		fwrite($out, "ERROR\n");
+		exit;
 	default:
 		fwrite($out, "lolz\n");
 	}
