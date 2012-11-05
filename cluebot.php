@@ -158,7 +158,6 @@ function on_trigger($source, $target, $message) {
 			}
 			user_merge($srcnick, $old_user, $new_user);
 			send("NOTICE", $srcnick, "Merged $old_user into $new_user");
-			break;
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}
