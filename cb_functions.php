@@ -225,8 +225,11 @@ function user_reset_points($caller, $nick) {
 	save_db();
 
 	log_strv("%s reset %s", $caller, $nick);
-	if (!nickeq($nick, $caller))
-		send("NOTICE", $nick, "Your ClueBot account was reset by $caller.");
+
+	if (nickeq($nick, $caller))
+		send("NOTICE", $nick, "Your DaVinci account was reset.");
+	else
+		send("NOTICE", $nick, "Your DaVinci account was reset by $caller.");
 }
 
 function user_merge($caller, $old_user, $new_user) {
