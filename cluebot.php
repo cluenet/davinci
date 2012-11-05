@@ -56,7 +56,6 @@ function on_trigger($source, $target, $message) {
 		if ($user['verbose']) {
 			$user['verbose'] = false;
 			$user['vdedo'] = false;
-			$user['vlog'] = false;
 			send("NOTICE", $srcnick, "Point change notices disabled.");
 		} else {
 			$user['verbose'] = true;
@@ -65,31 +64,16 @@ function on_trigger($source, $target, $message) {
 		break;
 	case 'vdeductions':
 		$user['verbose'] = true;
-		if ($user['vlog']) {
-			if ($user['vdedo']) {
-				$user['vdedo'] = false;
-				send("NOTICE", $srcnick, "Will notice you of every point change.");
-			} else {
-				$user['vdedo'] = true;
-				send("NOTICE", $srcnick, "Will notice you only of negative point changes.");
-			}
+		if ($user['vdedo']) {
+			$user['vdedo'] = false;
+			send("NOTICE", $srcnick, "Will notice you of every point change.");
 		} else {
-			send("NOTICE", $srcnick, "vdeductions is incompatible with vlog (TODO)");
+			$user['vdedo'] = true;
+			send("NOTICE", $srcnick, "Will notice you only of negative point changes.");
 		}
 		break;
 	case 'vlog':
-		$user['verbose'] = true;
-		if ($user['vdedo'] == false) {
-			if ($user['vlog']) {
-				$user['vlog'] = false;
-				send("NOTICE", $srcnick, "Will notice you of every point change.");
-			} else {
-				$user['vlog'] = true;
-				send("NOTICE", $srcnick, "Will notice you of log entries relating to you. (TODO: WTF IS THIS)");
-			}
-		} else {
-			send("NOTICE", $srcnick, "vdeductions is incompatible with vlog (TODO)");
-		}
+		send("NOTICE", $srcnick, ".vlog mode is now always enabled and does not affect other modes.");
 		break;
 	case 'points':
 		$who = $args[1] ? $args[1] : $srcnick;

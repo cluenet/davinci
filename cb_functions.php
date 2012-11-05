@@ -193,18 +193,17 @@ function user_adj_points_by($caller, $nick, $delta, $reason) {
 		($delta < 0 ? "" : "+"), $delta,
 		strescape($reason));
 
-	if ($reason == "Administratively changed")
-		$log = @$users[$nick]["vlog"];
+	if ($caller !== null) {
+		$log = true;
+		$reason .= " by $caller";
+	}
 	elseif ($delta > 0)
 		$log = @$users[$nick]["verbose"];
 	else
 		$log = @$users[$nick]["vdedo"];
 
-	if ($log) {
-		if ($caller !== null)
-			$reason .= " by $caller";
+	if ($log)
 		send("NOTICE", $nick, "$reason ($delta points)");
-	}
 
 	return $delta;
 }
