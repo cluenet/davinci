@@ -59,6 +59,7 @@ function on_trigger($source, $target, $message) {
 			send("NOTICE", $srcnick, "Point change notices disabled.");
 		} else {
 			$user['verbose'] = true;
+			$user['vdedo'] = false;
 			send("NOTICE", $srcnick, "Will notice you of every point change.");
 		}
 		break;

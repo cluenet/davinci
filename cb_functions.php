@@ -194,15 +194,16 @@ function user_adj_points_by($caller, $nick, $delta, $reason) {
 		strescape($reason));
 
 	if ($caller !== null) {
-		$log = true;
+		$do_log = true;
 		$reason .= " by $caller";
+	} elseif ($delta >= 0) {
+		$do_log = @$users[$nick]["verbose"]
+			&& !@$users[$nick]["vdedo"];
+	} else {
+		$do_log = @$users[$nick]["verbose"];
 	}
-	elseif ($delta > 0)
-		$log = @$users[$nick]["verbose"];
-	else
-		$log = @$users[$nick]["vdedo"];
 
-	if ($log)
+	if ($do_log)
 		send("NOTICE", $nick, "$reason ($delta points)");
 
 	return $delta;
