@@ -120,23 +120,24 @@ function on_trigger($source, $target, $message) {
 				break;
 			}
 			user_set_ignored($srcnick, $victim, $ignore);
-			if ($ignore)
+			if ($ignore) {
 				send("NOTICE", $srcnick, "$victim is now ignored.");
-			else
+				send("NOTICE", $victim, "You are now ignored.");
+			} else {
 				send("NOTICE", $srcnick, "$victim is not ignored anymore.");
+				send("NOTICE", $victim, "You are not ignored anymore.");
+			}
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}
 		break;
 	case 'lock':
 		if (user_is_admin($srcnick)) {
-			if ($locked) {
-				$locked = false;
-				send("NOTICE", $srcnick, "The database is now in read-write mode.");
-			} else {
-				$locked = true;
+			$locked = !$locked;
+			if ($locked)
 				send("NOTICE", $srcnick, "The database is now in read-only mode.");
-			}
+			else
+				send("NOTICE", $srcnick, "The database is now in read-write mode.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}
@@ -199,9 +200,13 @@ function on_trigger($source, $target, $message) {
 			send("NOTICE", $srcnick, "Missing user argument.");
 			break;
 		}
-		if (user_is_admin($srcnick) || nickeq($srcnick, $victim)) {
+		if (nickeq($srcnick, $victim)) {
+			user_reset_points($srcnick, $victim);
+			send("NOTICE", $nick, "Your DaVinci account was reset.");
+		} elseif (user_is_admin($srcnick)) {
 			user_reset_points($srcnick, $victim);
 			send("NOTICE", $srcnick, "User $victim reset.");
+			send("NOTICE", $nick, "Your DaVinci account was reset by $caller.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}

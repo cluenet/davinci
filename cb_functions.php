@@ -131,7 +131,6 @@ function user_make_admin($caller, $nick) {
 	save_db();
 
 	log_strv("%s grant:admin %s", $caller, $nick);
-	send("NOTICE", $nick, "You are now a DaVinci administrator.");
 }
 
 function user_is_ignored($nick) {
@@ -154,14 +153,7 @@ function user_set_ignored($caller, $nick, $ignore) {
 		unset($users[$nick]["log"]["Ignored =0"]);
 	}
 
-	if ($ignore) {
-		log_strv("%s ignore %s y", $caller, $nick);
-		send("NOTICE", $nick, "You are now ignored by me.");
-	} else {
-		log_strv("%s ignore %s n", $caller, $nick);
-		send("NOTICE", $nick, "I stopped ignoring you.");
-	}
-
+	log_strv("%s ignore %s %s", $caller, $nick, $ignore ? "y" : "n");
 }
 
 function user_get_stats($nick) {
@@ -225,11 +217,6 @@ function user_reset_points($caller, $nick) {
 	save_db();
 
 	log_strv("%s reset %s", $caller, $nick);
-
-	if (nickeq($nick, $caller))
-		send("NOTICE", $nick, "Your DaVinci account was reset.");
-	else
-		send("NOTICE", $nick, "Your DaVinci account was reset by $caller.");
 }
 
 function user_merge($caller, $old_user, $new_user) {
