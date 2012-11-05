@@ -243,8 +243,12 @@ function on_trigger($source, $target, $message) {
 }
 
 function rate_message($nick, $message) {
+	$nickre = '[a-zA-Z0-9\[\]_|~`]+';
+
 	$smilies  = '((>|\})?(:|;|8)(-|\')?(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)';
 	$smilies .= '|(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)(-|\')?(:|;|8)(>|\})?)';
+
+	$message = preg_replace("/^$nickre: /", "", $message);
 
 	if (0
 	or preg_match('!^s/.+/.+/?$!', $message)
