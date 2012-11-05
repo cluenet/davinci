@@ -261,16 +261,7 @@ function gettop($bottom = false) {
 	return $tmp2;
 }
 
-function mysqlconn($user,$pass,$host,$port,$database) {
-	global $mysql;
-	$mysql = mysql_connect($host.':'.$port,$user,$pass);
-	if(!$mysql) {
-		die('Can not connect to MySQL!');
-	}
-	if(!mysql_select_db($database,$mysql)) {
-		die('Can not access database!');
-	}
-}
+### Database operations
 
 const DB_FILE = 'users.db';
 
