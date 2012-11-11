@@ -144,14 +144,7 @@ function user_set_ignored($caller, $nick, $ignore) {
 	global $users;
 	$nick = nicktolower($nick);
 
-	if ($ignore) {
-		@$users[$nick]["ignore"] = true;
-		@$users[$nick]["points"] = 0;
-		@$users[$nick]["log"] = array("Ignored =0" => 1);
-	} else {
-		@$users[$nick]["ignore"] = false;
-		unset($users[$nick]["log"]["Ignored =0"]);
-	}
+	@$users[$nick]["ignore"] = $ignore;
 
 	log_strv("%s ignore %s %s", $caller, $nick, $ignore ? "y" : "n");
 }
