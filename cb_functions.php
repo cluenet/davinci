@@ -146,7 +146,8 @@ function user_set_ignored($caller, $nick, $ignore) {
 
 	@$users[$nick]["ignore"] = $ignore;
 
-	log_strv("%s ignore %s %s", $caller, $nick, $ignore ? "y" : "n");
+	log_strv("%s ignore %s ignored=%s points=%d",
+		$caller, $nick, $ignore ? "y" : "n", @$users[$nick]["points"]);
 }
 
 function user_get_stats($nick) {
@@ -206,10 +207,13 @@ function user_reset_points($caller, $nick) {
 	global $users;
 	$nick = nicktolower($nick);
 
+	$old = @$users[$nick];
+
 	unset($users[$nick]);
 	save_db();
 
-	log_strv("%s reset %s", $caller, $nick);
+	log_strv("%s reset %s oldpoints=%d",
+		$caller, $nick, @$old["points"]);
 }
 
 function user_merge($caller, $old_user, $new_user) {
