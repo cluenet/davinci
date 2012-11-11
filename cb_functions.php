@@ -154,10 +154,14 @@ function user_get_stats($nick) {
 	global $users;
 	$nick = nicktolower($nick);
 
-	$stats = "";
-	foreach (@$users[$nick]["log"] as $reason => $count)
-		$stats .= "$reason: $count. ";
-	return rtrim($stats);
+	if (is_array(@$users[$nick]["log"])) {
+		$stats = "";
+		foreach (@$users[$nick]["log"] as $reason => $count)
+			$stats .= "$reason: $count. ";
+		return rtrim($stats);
+	} else {
+		return "No stats.";
+	}
 }
 
 function user_get_points($nick) {
@@ -183,7 +187,7 @@ function user_adj_points_by($caller, $nick, $delta, $reason) {
 	save_db();
 
 	log_strv("%s change %s %s%d \"%s\"",
-		$caller, $nick,
+		@$caller, $nick,
 		($delta < 0 ? "" : "+"), $delta,
 		strescape($reason));
 

@@ -190,7 +190,7 @@ function on_trigger($source, $target, $message) {
 		} elseif (user_is_admin($srcnick)) {
 			user_reset_points($srcnick, $victim);
 			send("NOTICE", $srcnick, "User $victim reset.");
-			send("NOTICE", $victim, "Your DaVinci account was reset by $caller.");
+			send("NOTICE", $victim, "Your DaVinci account was reset by $srcnick.");
 		} else {
 			send("NOTICE", $srcnick, "Access denied.");
 		}
@@ -243,6 +243,7 @@ function rate_message($nick, $message) {
 	or preg_match('/^'.$smilies.'$/i', $message)
 	or preg_match('/^(um+|uh+m*|er+m*|ah+|ok)\.*$/i', $message)
 	or preg_match('/^(brb|bbl|lol|rot?fl|heh|wt[fh]|haha?|lmf?ao|bbiab|grr+|hr?m+|gtg|wb)/i', $message)
+	or preg_match('/^PM[^a-z]*$/', $message)
 	or preg_match('!(http|ftp)s?://!', $message)
 	or preg_match('/^[^a-z]/i', $message)
 	)
