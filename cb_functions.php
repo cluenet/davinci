@@ -18,38 +18,37 @@ class Prefix {
 function ircexplode($str) {
 	$str = rtrim($str, "\r\n");
 	$pos = strpos($str, " :");
-	if($pos === false)
+	if ($pos === false)
 		$trailing = null;
 	else {
 		$trailing = substr($str, $pos+2);
 		$str = substr($str, 0, $pos);
 	}
 	$params = explode(" ", $str);
-	if($trailing !== null)
+	if ($trailing !== null)
 		$params[] = $trailing;
 	return $params;
 }
 
 function ircimplode($params) {
 	$trailing = array_pop($params);
-	if(strpos($trailing, " ") !== false
-	or strpos($trailing, ":") !== false) {
+	if (strpos($trailing, " ") !== false
+	or strpos($trailing, ":") !== false)
 		$trailing = ":".$trailing;
-	}
 	$params[] = $trailing;
 	$str = implode(" ", $params) . "\r\n";
 	return $str;
 }
 
 function prefixparse($prefix) {
-	if($prefix === null)
+	if ($prefix === null)
 		return new Prefix(null, null, null);
 
 	$npos = $prefix[0] == ":" ? 1 : 0;
 	$upos = strpos($prefix, "!", $npos);
 	$hpos = strpos($prefix, "@", $upos);
 
-	if($upos === false or $hpos === false) {
+	if ($upos === false or $hpos === false) {
 		$nick = null;
 		$user = null;
 		$host = substr($prefix, $npos);
