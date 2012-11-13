@@ -17,16 +17,10 @@ class Prefix {
 
 function ircexplode($str) {
 	$str = rtrim($str, "\r\n");
-	$pos = strpos($str, " :");
-	if ($pos === false)
-		$trailing = null;
-	else {
-		$trailing = substr($str, $pos+2);
-		$str = substr($str, 0, $pos);
-	}
-	$params = explode(" ", $str);
-	if ($trailing !== null)
-		$params[] = $trailing;
+	$str = explode(" :", $str, 2);
+	$params = explode(" ", $str[0]);
+	if (count($str) > 1)
+		$params[] = $str[1];
 	return $params;
 }
 
