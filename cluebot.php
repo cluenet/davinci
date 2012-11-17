@@ -232,18 +232,12 @@ function on_trigger($source, $target, $message) {
 function rate_message($nick, $message) {
 	$nickre = '[a-zA-Z0-9\[\]_|~`]+';
 
-	$smilies  = '((>|\})?(:|;|8)(-|\')?(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)';
-	$smilies .= '|(\)|[Dd]|[Pp]|\(|[Oo]|[Xx]|\\|\/)(-|\')?(:|;|8)(>|\})?)';
-
 	$message = preg_replace("/^$nickre: /", "", $message);
 
-	if (0
-	or preg_match('!^s/.+/.+/?$!', $message)
+	if (
+	   preg_match('!^s/.+/.+/?$!', $message)
 	or preg_match('!^s(.).+\1.*\1g?$!', $message)
-	or preg_match('/^'.$smilies.'$/i', $message)
-	or preg_match('/^(um+|uh+m*|er+m*|ah+|ok)\.*$/i', $message)
-	or preg_match('/^(brb|bbl|lol|rot?fl|heh|wt[fh]|haha?|lmf?ao|bbiab|grr+|hr?m+|gtg|wb)/i', $message)
-	or preg_match('/^PM[^a-z]*$/', $message)
+	or preg_match('/^([a-z]{1,3}|rot?fl|haha?|lmf?ao|bbiab|grr+|hr?m+|um+|uh+m*|er+m*|ah+)[^a-z]*$/i', $message)
 	or preg_match('!(http|ftp)s?://!', $message)
 	or preg_match('/^[^a-z]/i', $message)
 	)
