@@ -310,7 +310,7 @@ while (!feof($socket)) {
 	$line = Message::parse($line);
 	$source = &$line->prefix;
 	$params = &$line->params;
-	$srcnick = $source->nick;
+	$srcnick = $source ? $source->nick : null;
 	$cmd = $params[0];
 
 	switch ($cmd) {
