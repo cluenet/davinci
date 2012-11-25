@@ -1,73 +1,7 @@
 <?php
 // vim: noet
 
-### IRC protocol stuff
-
-class Prefix {
-	public $nick;
-	public $user;
-	public $host;
-
-	public function __construct($nick, $user, $host) {
-		$this->nick = $nick;
-		$this->user = $user;
-		$this->host = $host;
-	}
-}
-
-function ircexplode($str) {
-	$str = rtrim($str, "\r\n");
-	$str = explode(" :", $str, 2);
-	$params = explode(" ", $str[0]);
-	if (count($str) > 1)
-		$params[] = $str[1];
-	return $params;
-}
-
-function ircimplode($params) {
-	$trailing = array_pop($params);
-	if (strpos($trailing, " ") !== false
-	or strpos($trailing, ":") !== false)
-		$trailing = ":".$trailing;
-	$params[] = $trailing;
-	$str = implode(" ", $params) . "\r\n";
-	return $str;
-}
-
-function prefixparse($prefix) {
-	if ($prefix === null)
-		return new Prefix(null, null, null);
-
-	$npos = $prefix[0] == ":" ? 1 : 0;
-	$upos = strpos($prefix, "!", $npos);
-	$hpos = strpos($prefix, "@", $upos);
-
-	if ($upos === false or $hpos === false) {
-		$nick = null;
-		$user = null;
-		$host = substr($prefix, $npos);
-	} else {
-		$nick = substr($prefix, $npos, $upos++-$npos);
-		$user = substr($prefix, $upos, $hpos++-$upos);
-		$host = substr($prefix, $hpos);
-	}
-
-	return new Prefix($nick, $user, $host);
-}
-
-function ischannel($target) {
-	return $target[0] == "#";
-}
-
-function nicktolower($nick) {
-	$nick = strtolower($nick);
-	$nick = strtr($nick, "[]\\", "{}|");
-	return $nick;
-}
-
-function nickeq($a, $b) {
-	return nicktolower($a) === nicktolower($b);
-}
+require "libirc.php";
 
 ### Misc utilities
 

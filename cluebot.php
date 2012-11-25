@@ -304,14 +304,11 @@ while (!feof($socket)) {
 	$line = fgets($socket);
 	if (!strlen($line))
 		continue;
-	$params = ircexplode($line);
-	if ($params[0][0] == ":")
-		$prefix = array_shift($params);
-	else
-		$prefix = null;
-	$source = prefixparse($prefix);
+	$line = Message::parse($line);
+	$source = &$line->prefix;
+	$params = &$line->params;
 	$srcnick = $source->nick;
-	$cmd = strtoupper($params[0]);
+	$cmd = $params[0];
 
 	switch ($cmd) {
 	case RPL_WELCOME:
