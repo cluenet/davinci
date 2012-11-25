@@ -17,7 +17,7 @@ class Message {
 	static function parse($str) {
 		$tags = array();
 		$prefix = null;
-		$params = ircexplode($str);
+		$params = self::explode($str);
 
 		if ($params[0][0] === "@") {
 			$tags = array_shift($params);
@@ -96,18 +96,6 @@ class MessagePrefix {
 
 		return new self($nick, $user, $host);
 	}
-}
-
-function ircexplode($str) {
-	return Message::explode($str);
-}
-
-function ircimplode($params) {
-	return Message::implode($params);
-}
-
-function prefixparse($prefix) {
-	return MessagePrefix::parse($prefix);
 }
 
 function ischannel($target) {

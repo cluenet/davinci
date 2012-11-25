@@ -14,7 +14,7 @@ function send(/*@args*/) {
 	global $socket;
 
 	$args = func_get_args();
-	$str = ircimplode($args);
+	$str = Message::implode($args);
 	return fwrite($socket, $str);
 }
 
