@@ -36,7 +36,10 @@ function on_register() {
 	if (strlen(@$config["irc_mode"]))
 		send("MODE", $mynick, $config["irc_mode"]);
 
-	send("JOIN", implode(",", $config["channels"]));
+	send("AWAY", "I'm a bot.");
+
+	if (@$config["channels"])
+		send("JOIN", implode(",", $config["channels"]));
 }
 
 function on_trigger($source, $target, $message) {
