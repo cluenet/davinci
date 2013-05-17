@@ -159,11 +159,11 @@ function gettop($bottom=false) {
 		if (isset($data["points"]))
 			$tmp[$nick] = $data["points"];
 	}
-	asort($tmp);
+	arsort($tmp);
 	if ($bottom)
-		return array_slice($tmp, 0, 3);
-	else
 		return array_slice($tmp, -3);
+	else
+		return array_slice($tmp, 0, 3);
 }
 
 ### Database operations
