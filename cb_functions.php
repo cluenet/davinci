@@ -160,22 +160,24 @@ function user_merge($caller, $old_user, $new_user) {
 	log_strv("%s merge %s %s %s", $caller, $old_user, $new_user, $old_points);
 }
 
-function gettop($bottom = false) {
+function gettop($bottom=false) {
 	global $users;
-	foreach($users as $nick => $data) {
-		$tmp[$nick] = $data['points'];
+	foreach ($users as $nick => $data) {
+		if (isset($data["points"]))
+			$tmp[$nick] = $data["points"];
 	}
-	uasort($tmp,'mysort');
-	if($bottom == false) { $tmp = array_reverse($tmp,true); }
+	uasort($tmp, "mysort");
+	if (!$bottom)
+		$tmp = array_reverse($tmp, true);
 	$i = 0;
-	foreach($tmp as $nick => $pts) {
+	foreach ($tmp as $nick => $pts) {
 		$i++;
 		$tmp2[$nick] = $pts;
-		if($i >= 3) {
+		if ($i >= 3)
 			break;
-		}
 	}
-	if($bottom == true) { $tmp2 = array_reverse($tmp2,true); }
+	if ($bottom)
+		$tmp2 = array_reverse($tmp2, true);
 	return $tmp2;
 }
 
