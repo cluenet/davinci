@@ -9,13 +9,6 @@ function strescape($str) {
 	return addcslashes($str, "\x00..\x1F\x7F..\xFF\\");
 }
 
-function mysort($a,$b) {
-	if(!isset($a)) $a = 0;
-	if(!isset($b)) $b = 0;
-	return($a == $b) ? 0 :
-		($a > $b) ? 1 : -1;
-}
-
 ### Logging
 
 function _log_open() {
@@ -166,7 +159,7 @@ function gettop($bottom=false) {
 		if (isset($data["points"]))
 			$tmp[$nick] = $data["points"];
 	}
-	uasort($tmp, "mysort");
+	asort($tmp);
 	if ($bottom)
 		return array_slice($tmp, 0, 3);
 	else
