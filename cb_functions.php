@@ -167,18 +167,10 @@ function gettop($bottom=false) {
 			$tmp[$nick] = $data["points"];
 	}
 	uasort($tmp, "mysort");
-	if (!$bottom)
-		$tmp = array_reverse($tmp, true);
-	$i = 0;
-	foreach ($tmp as $nick => $pts) {
-		$i++;
-		$tmp2[$nick] = $pts;
-		if ($i >= 3)
-			break;
-	}
 	if ($bottom)
-		$tmp2 = array_reverse($tmp2, true);
-	return $tmp2;
+		return array_slice($tmp, 0, 3);
+	else
+		return array_slice($tmp, -3);
 }
 
 ### Database operations
