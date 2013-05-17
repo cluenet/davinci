@@ -348,6 +348,8 @@ while (!feof($socket)) {
 			send("NOTICE", $srcnick, "\001VERSION DaVinci by Cluenet (HEAD is $git_hash)\001");
 		} elseif ($message[0] == $config["trigger"]) {
 			on_trigger($source, $target, $message);
+		} elseif ($message == "botsnack") {
+			send("PRIVMSG", ischannel($target) ? $target : $srcnick, ":D");
 		} elseif (ischannel($target)) {
 			$delta = rate_message($srcnick, $message);
 			$pts = user_get_points($srcnick);
@@ -358,6 +360,7 @@ while (!feof($socket)) {
 		} else {
 			send("NOTICE", $srcnick, "?");
 		}
+		break;
 	}
 }
 ?>
