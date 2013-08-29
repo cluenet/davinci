@@ -230,6 +230,10 @@ function on_trigger($source, $target, $message) {
 		if (user_is_ignored($who))
 			send("NOTICE", $srcnick, "$who is ignored by DaVinci.");
 		break;
+	case 'ddos':
+		if (ischannel($target))
+			send("KICK", $target, $srcnick, "Don't be a moron.");
+		break;
 	}
 }
 
