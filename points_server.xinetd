@@ -1,0 +1,10 @@
+service cluebot
+{
+	flags		= IPv6
+	type		= UNLISTED
+	socket_type	= stream
+	port		= 58945
+	wait		= no
+	user		= grawity
+	server		= /home/grawity/lib/davinci/points_server.php
+}
